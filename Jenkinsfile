@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    
     tools {
         nodejs "node"
     }
@@ -13,34 +12,29 @@ pipeline {
                 }
             }
         }
-     
         stage('Node JS Build') {
             steps {
                 sh 'npm install'
             }
         }
-  
         stage('Build Node JS Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t prdong/node-app-1.0 .'
+                    sh 'docker build -t pradong/node-app-1.0 .'
                 }
             }
         }
-
-
         stage('Deploy Docker Image to DockerHub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'prdongdocker', variable: 'prdongdocker')]) {
-                        sh 'docker login -u prdong -p ${prdongdocker}'
+                    withCredentials([string(credentialsId: 'pradongdocker', variable: 'pradongdocker')]) {
+                        sh 'docker login -u pradong -p ${pradongdocker}'
                     }
 
-                    sh 'docker push prdong/node-app-1.0'
+                    sh 'docker push pradong/node-app-1.0'
                 }
             }   
         }
-         
         stage('Deploying Node App to Kubernetes') {
             steps {
                 script {
